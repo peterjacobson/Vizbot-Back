@@ -22,6 +22,7 @@ app.all('*', function(req, res, next) {
 	res.header("Access-Control-Allow-Origin", "*");
 	res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
 	res.header("Access-Control-Allow-Headers", "X-Requested-With,Content-Type,Cache-Control");
+	res.header("Access-Control-Expose-Headers", "id");
 	next();
 });
 
@@ -33,9 +34,9 @@ app.post('/users', user.createUser);
 //app.put('/users/:id', user.modifyUser);
 //app.delete('/users/:id', user.deleteUser);
 
-//app.get('/users/:id/consents', user.getConsents)
+app.get('/users/:id/consents', user.getConsents)
 //app.get('/consents/:id', consent.getConsent);
-//app.post('/consents', consent.createConsent);
+app.post('/consents', consent.createConsent);
 //app.put('/consents/:id', consent.modifyConsent);
 //app.delete('/consents/:id', consent.deleteConsent);
 

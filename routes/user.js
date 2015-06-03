@@ -1,8 +1,5 @@
 var services = require('../services/mongooseServices');
 
-var user = {
-}
-
 exports.getUser = function(req, res){
     services.getUserById(req.params.id, function(user){
     if(user)
@@ -50,6 +47,14 @@ exports.logIn = function(req, res){
 	  } else res.status(400).end('{"error" : "syntax error"}');
 };
 
+exports.getConsents = function(req, res){
+	services.getConsentsByUser(req.params.id, function(consents){
+		if(consents)
+			res.json(consents);
+		else
+			res.status(404).end("No consents avalaible");
+	});
+}
 
 
 
