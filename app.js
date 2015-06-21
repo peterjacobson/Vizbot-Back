@@ -12,7 +12,7 @@ var mongo = require('./services/mongooseServices');
 
 var app = express();
 
-app.set('port', process.env.PORT || 3000);
+app.set('port', process.env.PORT || 8080);
 app.use(morgan('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -33,7 +33,7 @@ app.post('/users', user.createUser);
 app.put('/users/:id', user.modifyUser);
 app.delete('/users/:id', user.deleteUser);
 
-app.get('/users/:id/consents', user.getConsents)
+app.get('/users/:id/consents', user.getConsents);
 app.get('/consents/:id', consent.getConsent);
 app.post('/consents', consent.createConsent);
 app.post('/consents/:id', consent.modifyConsent);
