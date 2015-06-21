@@ -30,13 +30,20 @@ app.all('*', function(req, res, next) {
 app.get('/users/:id', user.getUser);
 app.put('/users', user.logIn);
 app.post('/users', user.createUser);
-
-//app.put('/users/:id', user.modifyUser);
-//app.delete('/users/:id', user.deleteUser);
+app.put('/users/:id', user.modifyUser);
+app.delete('/users/:id', user.deleteUser);
 
 app.get('/users/:id/consents', user.getConsents)
-//app.get('/consents/:id', consent.getConsent);
+app.get('/consents/:id', consent.getConsent);
 app.post('/consents', consent.createConsent);
+app.post('/consents/:id', consent.modifyConsent);
+app.put('/consents/:id/buildingInfo', consent.addBuildingInfo);
+app.put('/consents/:id/document', consent.addDocument);
+app.put('/consents/:id/project', consent.addProject);
+app.put('/consents/:id/people', consent.addPeople);
+app.put('/consents/:id/more', consent.addMore);
+
+
 //app.put('/consents/:id', consent.modifyConsent);
 //app.delete('/consents/:id', consent.deleteConsent);
 

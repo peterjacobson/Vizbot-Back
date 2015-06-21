@@ -23,24 +23,63 @@ var schemas = {
     status : String,
     user : String,
     buildingInfo : {
+      name : String, 
     	client : String,
     	description : String, 
-    	location : String, 
+    	address : String, 
     	area : String, 
-    	levels : Number
+    	level : Number,
+      totalFloor : Number,
+      existingFloor : Number,
+      newFloor : Number, 
+      lawfully : String, 
+      yearConstructed : String
     },
     project : {
     	description : String, 
-    	currentUse : String, 
-    	changeUse : String
+    	approval : [String], 
+    	life : String,
+      newValue : String,
+      other : String, 
+      prev : String, 
+      useOfSite : String, 
+      value : {
+        info : String, 
+        detail : String
+      },
+      value : String, 
+      workResult : String
     },
     people : [{
-    	registration : String, 
-    	name : String, 
-    	address : String, 
-    	mail : String, 
-    	phone : String, 
-    	Role : String
+      peopleType : String,
+      //Pro 
+      type : { type: String },
+      agentName : String, 
+      name : String, 
+      address : {
+        street : String,
+        suburb : String, 
+        city : String, 
+        postCode : String 
+      },
+      phone : String,
+      website : String, 
+      registration : String,
+      mail : String,
+      //Agent 
+      relation : String,
+      pointContact : String,
+      invoice : String, 
+      account : String, 
+      accountNumber : String, 
+      companyNumer : String,
+      //licensed
+      classL : String, 
+      lbp : String, 
+      certificat : String, 
+      record : String,
+      work : String
+      //client
     }],
     doc : [String],
     more : {
@@ -141,6 +180,8 @@ exports.createConsent = function(consent, callback){
   instance.address = consent.address;
   instance.status = consent.status;
   instance.user = consent.user;
+  instance.owner = consent.owner;
+  instance.councilRef = consent.councilRef;
 
   instance.save(function (err, consent) {
     if (err) {
@@ -154,7 +195,7 @@ exports.createConsent = function(consent, callback){
         user.consents.push(consent.id);
         user.save(callback);
         instance.save(callback);
-        callback(201, consent.id);
+        callback(201, consent.id, instance);
        }
       else{
         if (err) console.log(err);
@@ -166,6 +207,40 @@ exports.createConsent = function(consent, callback){
 
 }
 
+/**
+* Modify Consent
+*/
+exports.modifyConsent = function(id, consent, callback){
+  db.on('error', console.error.bind(console, 'connection error:'));
+  var ConsentModel = mongoose.model('Consent', schemas.consentSchema);
+  this.getConsentById(id, function(instance){
+
+        instance.title = consent.title;
+        instance.client = consent.client;
+        instance.address = consent.address;
+        instance.status = consent.status;
+        instance.user = consent.user;
+        instance.owner = consent.owner;
+        instance.councilRef = consent.councilRef;
+        instance.buildingInfo = consent.buildingInfo;
+        instance.project = consent.project;
+        instance.people = consent.people;
+        instance.doc = consent.doc;
+        instance.more = consent.more;
+        instance.workingDays = consent.workingDays;
+        instance.notifications = consent.notifications;
+        console.log("INSTANCE : " + instance);
+
+        instance.save(function(err,instance){
+          if(err){
+            callback(404);
+          }
+          else
+            callback(200);
+        });
+  });
+}
+
 /*
 * Get consent by ID
 */
@@ -174,13 +249,12 @@ exports.getConsentById = function(id, callback){
   db.on('error', console.error.bind(console, 'connection error:'));
 
   var ConsentModel = mongoose.model('Consent', schemas.consentSchema);
-
   ConsentModel.findOne({ _id: id }, function(err, consent){
       if(!err){
         callback(consent);
       }
       else
-        return console.log(err);
+        return console.log("Real error : "+ err);
     });
 }
 
@@ -206,7 +280,6 @@ exports.getConsentsByUser = function(idUser, callback){
       });
     };
   });
-  console.log(consents);
 }
 
 

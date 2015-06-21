@@ -35,6 +35,39 @@ exports.createUser = function(req, res){
 	 }
 };
 
+exports.modifyUser = function(req, res){
+var id = req.params.id;
+  if(req.body == null) res.status(400).end("Syntax error");
+  else{
+    var user = {
+      nickname : req.body.nickname,
+      mail : req.body.mail,
+      pwd : req.body.pwd,
+      avatar : req.body.avatar,
+      pos : [{
+        lat : req.body.lat,
+        long : req.body.long
+      }]
+    }
+    services.modifyUser(id,user,function(code){
+      if(code == 404)
+        res.status(code).end("Unable to modify user");
+      else
+        res.status(code).end("User modified");
+    });
+  }
+};
+
+exports.deleteUser = function(req, res){
+  if(!req.params.id) res.status(400).end("Syntax error");
+  services.deleteUser(req.params.id, function(code){
+    if(code == 204)
+     res.status(code).end("User deleted");
+    else
+      res.status(code).end("Unable to delete");
+  });
+};
+
 exports.logIn = function(req, res){
 	if(req.body.mail && req.body.pwd){
 	    services.logIn(req.body.mail, req.body.pwd, function(id, code){
