@@ -272,13 +272,14 @@ exports.getConsentsByUser = function(idUser, callback){
   var user = new UserModel();
   var consents = new Array();
   this.getUserById(idUser, function(user){
+    if(user.consents){
     var consentCount = user.consents.length;
     for (var i = 0; i < consentCount ; i++) {
       services.getConsentById(user.consents[i], function(consent){
         consents.push(consent);
         if(consents.length === consentCount) callback(consents);
       });
-    };
+    }};
   });
 }
 
