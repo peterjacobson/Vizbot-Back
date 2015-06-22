@@ -17,7 +17,7 @@ exports.createUser = function(req, res){
 	 }
 	 else{
 	  var user = {
-	    nickname : req.body.nickname,
+	    nickname : req.body.name,
 	    mail : req.body.mail,
 	    pwd : req.body.pwd,
 	    address : req.body.address,

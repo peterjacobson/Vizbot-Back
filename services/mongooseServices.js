@@ -11,7 +11,11 @@ var schemas = {
     mail : String,
     pwd : String,
     registration : String,
-    address : String,
+    address : {
+      street : String,
+      city : String,
+      postCode : String
+    },
     consents : [String]
   }),
 
