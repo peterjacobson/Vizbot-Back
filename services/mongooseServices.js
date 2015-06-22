@@ -134,10 +134,10 @@ exports.createUser = function(user, callback){
     instance.consents = [];
 
     instance.save(function (err, user, affected) {
-      if (err) callback(409);
+      if (err) {callback(409); console.log("User :" +user + " affected :  " + affected );}
       else {
         if(affected == 1) callback(201, user.id);
-        else callback(409);
+        else {callback(409); console.log("User :" +user + " affected :  " + affected );}
       }
   });
 }
