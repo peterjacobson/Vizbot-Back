@@ -275,6 +275,7 @@ exports.getConsentsByUser = function(idUser, callback){
   var instance = new ConsentModel();
   var user = new UserModel();
   var consents = new Array();
+
   this.getUserById(idUser, function(user){
     if(user.consents){
     var consentCount = user.consents.length;
@@ -283,7 +284,9 @@ exports.getConsentsByUser = function(idUser, callback){
         consents.push(consent);
         if(consents.length === consentCount) callback(consents);
       });
-    }};
+    }
+  }
+
   });
 }
 
