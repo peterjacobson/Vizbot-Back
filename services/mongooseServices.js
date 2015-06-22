@@ -277,7 +277,7 @@ exports.getConsentsByUser = function(idUser, callback){
   var consents = new Array();
 
   this.getUserById(idUser, function(user){
-    if(user.consents){
+    if(user){
     var consentCount = user.consents.length;
     for (var i = 0; i < consentCount ; i++) {
       services.getConsentById(user.consents[i], function(consent){
@@ -285,8 +285,9 @@ exports.getConsentsByUser = function(idUser, callback){
         if(consents.length === consentCount) callback(consents);
       });
     }
+  }else{
+    callback();
   }
-
   });
 }
 
