@@ -60,7 +60,7 @@ exports.modifyConsent = function(req, res){
       workingDays : req.body.workingDays,
       notifications : req.body.notifications
   };
-  console.log(consent);
+  console.log(consent.doc);
   services.modifyConsent(id, consent, function(code, consent){
     if(code == 200){
       res.json(consent);
@@ -99,23 +99,19 @@ exports.addBuildingInfo = function(req, res){
 };
 
 exports.addDocument = function(req, res){
-  var id = req.params.id;
-  if(req.body == null) res.status(400).end("Syntax error");
-  else{
-    var documents = {
-      client : String,
-      description : String, 
-      location : String, 
-      area : String, 
-      levels : Number
-    }
-    services.addDocument(id,documents,function(code){
-      if(code == 404)
-        res.status(code).end("Unable to modify user");
-      else
-        res.status(code).end("User modified");
-    });
-  }
+  var doc = {
+    url : "./assets/consentDocument/" + req.files.file.name,
+    name : req.files.file.originalname,
+    idUser : req.params.id
+  };
+   services.updatedDocument(doc, function(code){
+      if(code == 404){
+        res.status(code).end("Unable to upload the files");
+      }else{
+        res.status(code).end("Document uploaded");
+      }
+   });
+  console.log(req.files);
 };
 
 exports.addProject = function(req, res){

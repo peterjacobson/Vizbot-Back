@@ -5,6 +5,9 @@ var bodyParser = require('body-parser');
 var methodOverride = require('method-override');
 var errorhandler = require('errorhandler');
 var http = require('http');
+var multer  = require('multer');
+var path = require('path');
+
 
 var user = require('./routes/user');
 var consent = require('./routes/consent');
@@ -12,11 +15,15 @@ var mongo = require('./services/mongooseServices');
 
 var app = express();
 
-app.set('port', process.env.PORT || 8080);
+app.use(multer({ dest: './assets/consentDocument'}));
+app.set('port', process.env.PORT || 3000);
 app.use(morgan('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(methodOverride('X-HTTP-Method-Override'));
+app.use("/assets", express.static(__dirname + '/assets'));
+console.log(__dirname);
+
 
 app.all('*', function(req, res, next) {
 	res.header("Access-Control-Allow-Origin", "*");
@@ -37,8 +44,9 @@ app.get('/users/:id/consents', user.getConsents);
 app.get('/consents/:id', consent.getConsent);
 app.post('/consents', consent.createConsent);
 app.post('/consents/:id', consent.modifyConsent);
+app.post('/consents/:id/document', consent.addDocument);
+
 app.put('/consents/:id/buildingInfo', consent.addBuildingInfo);
-app.put('/consents/:id/document', consent.addDocument);
 app.put('/consents/:id/project', consent.addProject);
 app.put('/consents/:id/people', consent.addPeople);
 app.put('/consents/:id/more', consent.addMore);

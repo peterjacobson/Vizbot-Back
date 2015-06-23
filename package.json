@@ -6,11 +6,13 @@
     "start": "node app.js"
   },
   "dependencies": {
-    "express": "*",
-    "mongoose": "*",
     "body-parser": "*",
     "errorhandler": "*",
+    "express": "*",
+    "method-override": "*",
+    "mongoose": "*",
     "morgan": "*",
-    "method-override": "*"
+    "multer": "^0.1.8",
+    "path": "^0.11.14"
   }
 }

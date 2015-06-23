@@ -85,7 +85,10 @@ var schemas = {
       work : String
       //client
     }],
-    doc : [String],
+    doc : [{
+      url : String,
+      name : String
+    }],
     more : {
     	authorization : String, 
     	signature : String, 
@@ -289,6 +292,31 @@ exports.getConsentsByUser = function(idUser, callback){
     callback();
   }
   });
+}
+
+exports.updatedDocument = function(doc, callback){
+  db.on('error', console.error.bind(console, 'connection error:'));
+
+  var ConsentModel = mongoose.model('Consent', schemas.consentSchema);
+  var instance = new ConsentModel();
+  var obj = {
+    url : doc.url,
+    name : doc.name
+  };
+  console.log(obj);
+  ConsentModel.findOne({ _id: doc.idUser }, function(err, consent){
+  if(!err && consent){
+    console.log(consent);
+    consent.doc.push(obj);
+    consent.save();
+    callback(200);
+   }
+  else{
+    if (err) console.log(err);
+  }
+ });
+
+
 }
 
 
