@@ -7,6 +7,7 @@ var errorhandler = require('errorhandler');
 var http = require('http');
 var multer  = require('multer');
 var path = require('path');
+var static = require('node-static');
 
 
 var user = require('./routes/user');
@@ -21,8 +22,7 @@ app.use(morgan('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(methodOverride('X-HTTP-Method-Override'));
-app.use("/assets", express.static(__dirname + '/assets'));
-console.log(__dirname);
+app.use(express.static('assets'));
 
 
 app.all('*', function(req, res, next) {

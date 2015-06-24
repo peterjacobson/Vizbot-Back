@@ -13,6 +13,7 @@
     "mongoose": "*",
     "morgan": "*",
     "multer": "^0.1.8",
+    "node-static": "^0.7.6",
     "path": "^0.11.14"
   }
 }
