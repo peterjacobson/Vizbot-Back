@@ -100,7 +100,7 @@ exports.addBuildingInfo = function(req, res){
 
 exports.addDocument = function(req, res){
   var doc = {
-    url : "./assets/consentDocument/" + req.files.file.name,
+    url : "./consentDocument/" + req.files.file.name,
     name : req.files.file.originalname,
     idUser : req.params.id
   };

@@ -17,7 +17,7 @@ exports.createUser = function(req, res){
 	 }
 	 else{
 	  var user = {
-	    nickname : req.body.name,
+	    name : req.body.name,
 	    mail : req.body.mail,
 	    pwd : req.body.pwd,
 	    address : req.body.address,
@@ -40,7 +40,7 @@ var id = req.params.id;
   if(req.body == null) res.status(400).end("Syntax error");
   else{
     var user = {
-      nickname : req.body.nickname,
+      name : req.body.name,
       mail : req.body.mail,
       pwd : req.body.pwd,
       avatar : req.body.avatar,
