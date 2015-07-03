@@ -58,7 +58,8 @@ exports.modifyConsent = function(req, res){
       doc : req.body.doc,
       more : req.body.more, 
       workingDays : req.body.workingDays,
-      notifications : req.body.notifications
+      notifications : req.body.notifications,
+      RFI : req.body.RFI
   };
   console.log(consent.doc);
   services.modifyConsent(id, consent, function(code, consent){

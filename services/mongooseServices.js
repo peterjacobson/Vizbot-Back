@@ -41,18 +41,17 @@ var schemas = {
     },
     project : {
     	description : String, 
-    	approval : [String], 
-    	life : String,
-      newValue : String,
-      other : String, 
-      prev : String, 
-      useOfSite : String, 
-      value : {
-        info : String, 
+      useOfSite : {
+        info : String,
         detail : String
+      }, 
+      workResult : String,
+      life : String,
+      preApp : {
+        info : String, 
+        number : String
       },
-      value : String, 
-      workResult : String
+      value : String
     },
     people : [{
       peopleType : String,
@@ -70,19 +69,10 @@ var schemas = {
       website : String, 
       registration : String,
       mail : String,
-      //Agent 
-      relation : String,
-      pointContact : String,
-      invoice : String, 
-      account : String, 
-      accountNumber : String, 
-      companyNumer : String,
       //licensed
       classL : String, 
       lbp : String, 
-      certificat : String, 
-      record : String,
-      work : String
+      certificat : String
       //client
     }],
     doc : [{
@@ -99,6 +89,20 @@ var schemas = {
     	from : String, 
     	warning : String,
     	action : String
+    }],
+    RFI:[{
+      rfi_id : String,
+      location : String,
+      details : String, 
+      response : String, 
+      accepted : String,
+      creted_by : String,
+      date_letter_sent : String,
+      date_of_response : String,
+      date_signed_off : String,
+      signed_off_by : String, 
+      building_code_clause : String,
+      building_code_sub_clause : String
     }],
     workingDays : Number
   })
@@ -236,7 +240,6 @@ exports.modifyConsent = function(id, consent, callback){
         instance.more = consent.more;
         instance.workingDays = consent.workingDays;
         instance.notifications = consent.notifications;
-        console.log("INSTANCE : " + instance);
 
         instance.save(function(err,instance){
           if(err){
