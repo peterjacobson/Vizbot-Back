@@ -10,22 +10,29 @@ var schemas = {
     name : String,
     mail : String,
     pwd : String,
+    status: String,
     registration : String,
     address : {
       street : String,
       city : String,
       postCode : String
     },
-    consents : [String]
+    consents : [String], 
+    shareConsents : [String],
+    team : [String]
   }),
 
   consentSchema : new mongoose.Schema({
     title : String,
-    client : String,
+    role : String,
     address : String,
     councilRef : String,
     status : String,
     user : String,
+    lawfully : String,
+    newUse : String, 
+    numberPeople : Number,
+    old : Number,
     buildingInfo : {
       name : String, 
     	client : String,
@@ -185,14 +192,16 @@ exports.createConsent = function(consent, callback){
   var instance = new ConsentModel();
   var user = new UserModel();
 
-
+  instance.user = consent.user;
   instance.title = consent.title;
-  instance.client = consent.client;
+  instance.role = consent.role;
   instance.address = consent.address;
   instance.status = consent.status;
-  instance.user = consent.user;
-  instance.owner = consent.owner;
   instance.councilRef = consent.councilRef;
+  instance.lawfully = consent.lawfully;
+  instance.newUse = consent.newUse;
+  instance.numberPeople = consent.numberPeople;
+  instance.old = consent.old;
 
   instance.save(function (err, consent) {
     if (err) {
