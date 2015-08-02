@@ -17,7 +17,7 @@ var mongo = require('./services/mongooseServices');
 var app = express();
 
 app.use(multer({ dest: './assets/consentDocument'}));
-app.set('port', process.env.PORT || 3000);
+app.set('port', process.env.PORT || 8080);
 app.use(morgan('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
