@@ -29,35 +29,27 @@ var schemas = {
     councilRef : String,
     status : String,
     user : String,
-    lawfully : String,
-    newUse : String, 
+    lawfullyUse : {
+      first : String,
+      second : String,
+    },
+    newUse : {
+      first : String,
+      second : String,
+    }, 
     numberPeople : Number,
     old : Number,
     buildingInfo : {
-      name : String, 
-    	client : String,
-    	description : String, 
+      name : String,  
     	address : String, 
     	area : String, 
     	level : Number,
       totalFloor : Number,
-      existingFloor : Number,
       newFloor : Number, 
-      lawfully : String, 
-      yearConstructed : String
     },
     project : {
-    	description : String, 
-      useOfSite : {
-        info : String,
-        detail : String
-      }, 
-      workResult : String,
-      life : String,
-      preApp : {
-        info : String, 
-        number : String
-      },
+      info : Boolean, 
+      number : String,
       value : String
     },
     people : [{
@@ -80,7 +72,6 @@ var schemas = {
       classL : String, 
       lbp : String, 
       certificat : String
-      //client
     }],
     doc : [{
       url : String,
@@ -235,13 +226,16 @@ exports.modifyConsent = function(id, consent, callback){
   var ConsentModel = mongoose.model('Consent', schemas.consentSchema);
   this.getConsentById(id, function(instance){
 
+        instance.user = consent.user;
         instance.title = consent.title;
-        instance.client = consent.client;
+        instance.role = consent.role;
         instance.address = consent.address;
         instance.status = consent.status;
-        instance.user = consent.user;
-        instance.owner = consent.owner;
         instance.councilRef = consent.councilRef;
+        instance.lawfully = consent.lawfully;
+        instance.newUse = consent.newUse;
+        instance.numberPeople = consent.numberPeople;
+        instance.old = consent.old;
         instance.buildingInfo = consent.buildingInfo;
         instance.project = consent.project;
         instance.people = consent.people;

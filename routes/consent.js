@@ -30,6 +30,7 @@ exports.createConsent = function(req, res){
       newUse : req.body.newUse,
       numberPeople : req.body.numberPeople,
       old : req.body.old,
+      buildingWork : req.body.buildingWork
     };
   services.createConsent(consent, function(code, id, instance){
     if(code == 201){
@@ -82,11 +83,16 @@ exports.modifyConsent = function(req, res){
     var consent = {
       user : req.body.user,
       title : req.body.title,
-      client : req.body.client,
+      role : req.body.role,
       address : req.body.address,
-      owner : req.body.owner,
       status : req.body.status,
-      councilRef : req.body.councilRef,
+      councilRef : req.body.councilref,
+      lawfullyUse : req.body.lawfullyUse,
+      newUse : req.body.newUse,
+      numberPeople : req.body.numberPeople,
+      old : req.body.old,
+      buildingWork : req.body.buildingWork,
+
       buildingInfo : req.body.buildingInfo,
       project : req.body.project,
       people : req.body.people,
