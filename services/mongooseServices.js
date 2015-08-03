@@ -43,9 +43,9 @@ var schemas = {
       name : String,  
     	address : String, 
     	area : String, 
-    	level : Number,
-      totalFloor : Number,
-      newFloor : Number, 
+    	level : String,
+      totalFloor : String,
+      newFloor : String, 
     },
     project : {
       info : Boolean, 
