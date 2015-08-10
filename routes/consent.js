@@ -93,16 +93,21 @@ exports.modifyConsent = function(req, res){
       old : req.body.old,
       buildingWork : req.body.buildingWork,
 
+      agent : req.body.agent,
+      client : req.body.client,
+      people : req.body.people,
+      lbp : req.body.lbp,
+
       buildingInfo : req.body.buildingInfo,
       project : req.body.project,
-      people : req.body.people,
+      
       doc : req.body.doc,
       more : req.body.more, 
       workingDays : req.body.workingDays,
       notifications : req.body.notifications,
       RFI : req.body.RFI
   };
-  console.log(consent.doc);
+  console.log(consent);
   services.modifyConsent(id, consent, function(code, consent){
     if(code == 200){
       res.json(consent);

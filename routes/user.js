@@ -12,7 +12,7 @@ exports.getUser = function(req, res){
 
 exports.createUser = function(req, res){
 	if(req.body == null) res.status(400).end("Syntax error");
-	 else if(!req.body.name || !req.body.mail || !req.body.pwd || !req.body.address || !req.body.registration){
+	 else if(!req.body.name || !req.body.mail || !req.body.pwd || !req.body.address){
 	  res.status(400).end("Missing field");
 	 }
 	 else{
@@ -20,8 +20,7 @@ exports.createUser = function(req, res){
 	    name : req.body.name,
 	    mail : req.body.mail,
 	    pwd : req.body.pwd,
-	    address : req.body.address,
-	    registration : req.body.registration
+	    address : req.body.address
 	  }
 	  services.createUser(user, function(code, id){
 	    if(code == 201){

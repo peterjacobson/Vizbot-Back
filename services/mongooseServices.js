@@ -17,6 +17,7 @@ var schemas = {
       city : String,
       postCode : String
     },
+    phone : String,
     consents : [String], 
     shareConsents : [String],
     team : [String]
@@ -35,28 +36,56 @@ var schemas = {
     },
     newUse : {
       first : String,
-      second : String,
+      second : String
     }, 
     numberPeople : Number,
     old : Number,
+    buildingWork : String,
     buildingInfo : {
       name : String,  
     	address : String, 
     	area : String, 
     	level : String,
       totalFloor : String,
-      newFloor : String, 
+      newFloor : String 
     },
     project : {
       info : Boolean, 
       number : String,
       value : String
     },
+    agent: {
+      name : String, 
+      address : {
+        street : String,
+        suburb : String, 
+        city : String, 
+        postCode : String 
+      },
+      phone : String,
+      mail : String,
+      website : String
+    },
+    client: {
+      name : String, 
+      address : {
+        street : String,
+        suburb : String, 
+        city : String, 
+        postCode : String 
+      },
+      phone : String,
+      mail : String,
+      website : String
+    },
+    lbp: [{
+      name: String,
+      classL : String, 
+      lbp : String, 
+      certificat : String
+    }],
     people : [{
-      peopleType : String,
-      //Pro 
       type : { type: String },
-      agentName : String, 
       name : String, 
       address : {
         street : String,
@@ -67,11 +96,7 @@ var schemas = {
       phone : String,
       website : String, 
       registration : String,
-      mail : String,
-      //licensed
-      classL : String, 
-      lbp : String, 
-      certificat : String
+      mail : String
     }],
     doc : [{
       url : String,
@@ -193,6 +218,8 @@ exports.createConsent = function(consent, callback){
   instance.newUse = consent.newUse;
   instance.numberPeople = consent.numberPeople;
   instance.old = consent.old;
+  instance.buildingWork = consent.buildingWork;
+
 
   instance.save(function (err, consent) {
     if (err) {
@@ -200,11 +227,25 @@ exports.createConsent = function(consent, callback){
       callback(409);
     }
     else {
-      
       UserModel.findOne({ _id: consent.user }, function(err, user){
       if(!err && user){
         user.consents.push(consent.id);
         user.save(callback);
+        if(consent.role === "Agent"){
+          instance.agent = {
+            name : user.name, 
+            address : user.address,
+            phone : user.phone,
+            mail : user.mail
+          };
+        }else if(consent.role === "Client/Owner"){
+          instance.client = {
+            name : user.name, 
+            address : user.address,
+            phone : user.phone,
+            mail : user.mail
+          };
+        }
         instance.save(callback);
         callback(201, consent.id, instance);
        }
@@ -236,6 +277,13 @@ exports.modifyConsent = function(id, consent, callback){
         instance.newUse = consent.newUse;
         instance.numberPeople = consent.numberPeople;
         instance.old = consent.old;
+        instance.buildingWork = consent.buildingWork;
+
+        instance.agent = consent.agent,
+        instance.client = consent.client,
+        instance.people = consent.people,
+        instance.lbp = consent.lbp,
+
         instance.buildingInfo = consent.buildingInfo;
         instance.project = consent.project;
         instance.people = consent.people;
@@ -246,6 +294,7 @@ exports.modifyConsent = function(id, consent, callback){
 
         instance.save(function(err,instance){
           if(err){
+            console.log(err);
             callback(404);
           }
           else
