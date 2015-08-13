@@ -3,6 +3,7 @@ var mongoose = require('mongoose');
 var uri = "mongodb://127.0.0.1:27017/Vizbot";
 
 mongoose.connect(uri);
+
 var db = mongoose.connection;
 
 var schemas = {
@@ -32,7 +33,7 @@ var schemas = {
     user : String,
     lawfullyUse : {
       first : String,
-      second : String,
+      second : String
     },
     newUse : {
       first : String,
@@ -47,7 +48,10 @@ var schemas = {
     	area : String, 
     	level : String,
       totalFloor : String,
-      newFloor : String 
+      newFloor : String,
+      speSystem : Boolean,
+      speUpdate : String,
+      speFollows : String 
     },
     project : {
       info : Boolean, 
@@ -101,6 +105,11 @@ var schemas = {
     doc : [{
       url : String,
       name : String
+    }],
+    compliance : [{
+      url : String,
+      name : String,
+      clause : String
     }],
     more : {
     	authorization : String, 
@@ -214,7 +223,7 @@ exports.createConsent = function(consent, callback){
   instance.address = consent.address;
   instance.status = consent.status;
   instance.councilRef = consent.councilRef;
-  instance.lawfully = consent.lawfully;
+  instance.lawfullyUse = consent.lawfullyUse;
   instance.newUse = consent.newUse;
   instance.numberPeople = consent.numberPeople;
   instance.old = consent.old;
@@ -350,7 +359,7 @@ exports.getConsentsByUser = function(idUser, callback){
 }
 
 exports.updatedDocument = function(doc, callback){
-  db.on('error', console.error.bind(console, 'connection error:'));
+  db.once('error', console.error.bind(console, 'connection error:'));
 
   var ConsentModel = mongoose.model('Consent', schemas.consentSchema);
   var instance = new ConsentModel();
@@ -361,7 +370,7 @@ exports.updatedDocument = function(doc, callback){
   console.log(obj);
   ConsentModel.findOne({ _id: doc.idUser }, function(err, consent){
   if(!err && consent){
-    console.log(consent);
+    //console.log(consent);
     consent.doc.push(obj);
     consent.save();
     callback(200);
@@ -370,8 +379,28 @@ exports.updatedDocument = function(doc, callback){
     if (err) console.log(err);
   }
  });
+}
 
+exports.addCompliance = function(doc, callback){
+  db.once('error', console.error.bind(console, 'connection error:'));
 
+  var ConsentModel = mongoose.model('Consent', schemas.consentSchema);
+  var instance = new ConsentModel();
+  var obj = {
+    url : doc.url,
+    name : doc.name,
+    clause : doc.clause
+  };
+  ConsentModel.findOne({ _id: doc.idUser }, function(err, consent){
+  if(!err && consent){
+    consent.compliance.push(obj);
+    consent.save();
+    callback(200);
+   }
+  else{
+    if (err) console.log(err);
+  }
+ });
 }
 
 

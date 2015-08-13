@@ -8,6 +8,9 @@ var http = require('http');
 var multer  = require('multer');
 var path = require('path');
 var static = require('node-static');
+var request = require('request');
+
+
 
 
 var user = require('./routes/user');
@@ -45,15 +48,15 @@ app.get('/consents/:id', consent.getConsent);
 app.post('/consents', consent.createConsent);
 app.post('/consents/:id', consent.modifyConsent);
 app.post('/consents/:id/document', consent.addDocument);
+app.post('/consents/:id/productspec', consent.addProductSpec);
+app.post('/consents/:id/codeCompliance/:clause', consent.addCodeCompliance);
+
 
 app.put('/consents/:id/buildingInfo', consent.addBuildingInfo);
 app.put('/consents/:id/project', consent.addProject);
 app.put('/consents/:id/people', consent.addPeople);
 app.put('/consents/:id/more', consent.addMore);
 
-
-//app.put('/consents/:id', consent.modifyConsent);
-//app.delete('/consents/:id', consent.deleteConsent);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Port ' + app.get('port'));
