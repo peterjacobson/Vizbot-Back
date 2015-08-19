@@ -51,12 +51,23 @@ app.post('/consents/:id/document', consent.addDocument);
 app.post('/consents/:id/productspec', consent.addProductSpec);
 app.post('/consents/:id/codeCompliance/:clause', consent.addCodeCompliance);
 
+app.get('/submissions', consent.getSubmissions);
+app.get('/submissions/:id', consent.getSubmission);
 
-app.put('/consents/:id/buildingInfo', consent.addBuildingInfo);
-app.put('/consents/:id/project', consent.addProject);
-app.put('/consents/:id/people', consent.addPeople);
-app.put('/consents/:id/more', consent.addMore);
+app.post('/submissions/:id/accepted', consent.submissionAccepted);
+app.post('/submissions/:id/denied', consent.submissionDenied);
 
+//app.get('/consents', consent.getConsents);
+app.post('/consents/:id/rfc', consent.addRfc);
+app.post('/consents/:id/rfi', consent.addRfi);
+app.post('/consents/:id/status', consent.updateStatus);
+
+app.get('/consents/:id/rfi', consent.getRfi);
+app.get('/consents/:id/status', consent.getStatus);
+
+//app.post('/consents/:id/submitted', consent.consentSubmitted);
+
+app.post('/consents/:id/productspec', consent.addProductSpec);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Port ' + app.get('port'));

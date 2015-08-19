@@ -6,7 +6,37 @@ exports.getConsent = function(req, res){
     if(consent)
      res.json(consent);
    else{
-    res.status(404).end("User not avalaible");
+    res.status(404).end("Consent not avalaible");
+  }
+});
+};
+
+exports.getConsents = function(req, res){
+  services.getConsents(req.params.id, function(consents){
+    if(consents)
+     res.json(consents);
+   else{
+    res.status(404).end("No new consents");
+  }
+});
+};
+
+exports.getSubmissions = function(req, res){
+  services.getSubmissions(function(submissionsList){
+    if(submissionsList)
+     res.json(submissionsList);
+   else{
+    res.status(404).end("No new consents");
+  }
+});
+};
+
+exports.getSubmission = function(req, res){
+  services.getSubmission(req.params.id, function(submission){
+    if(submission)
+     res.json(submission);
+   else{
+    res.status(404).end("Consent not avalaible");
   }
 });
 };
@@ -46,37 +76,6 @@ exports.createConsent = function(req, res){
   }
 };
 
-/*
-exports.createConsent = function(req, res){
-  if(req.body == null) res.status(400).end("Syntax error");
-  else if(!req.body.title || !req.body.client || !req.body.address){
-  res.status(400).end("Missing field");
-  }else{
-    services.getUserById(req.body.user, function(user){
-      if(!user)
-        res.status(400).end("User unknown :  unable to create a consent");
-    });
-    var consent = {
-      user : req.body.user,
-      title : req.body.title,
-      client : req.body.client,
-      address : req.body.address,
-      owner : req.body.owner,
-      status : req.body.status
-  };
-  services.createConsent(consent, function(code, id, instance){
-    if(code == 201){
-      res.setHeader("url", req.url);
-      res.setHeader("id", id);
-      res.json(instance);
-      res.status(code).end("Consent added");
-    }
-    else if(code == 409)
-      res.status(code).end("Conflict : Unable to add Note");
-  });
-  }
-};
-*/
 exports.modifyConsent = function(req, res){
   var id = req.params.id;
   if(req.body == null) res.status(400).end("Syntax error");
@@ -120,10 +119,6 @@ exports.modifyConsent = function(req, res){
     });
   }
   
-};
-
-exports.deleteConsent = function(req, res){
-
 };
 
 exports.addBuildingInfo = function(req, res){
@@ -214,63 +209,90 @@ exports.addCodeCompliance = function(req, res){
   res.status(200).end("");
 };
 
-exports.addProject = function(req, res){
+exports.addRfc = function(req, res){
   var id = req.params.id;
-  if(req.body == null) res.status(400).end("Syntax error");
+  if(req.body === null) res.status(400).end("Syntax error");
   else{
-    var project = {
-      client : String,
-      description : String, 
-      location : String, 
-      area : String, 
-      levels : Number
-    }
-    services.addProject(id,project,function(code){
-      if(code == 404)
-        res.status(code).end("Unable to modify user");
+    services.addRfc(id, req.body.rfc, function(code){
+      if(code === 404)
+        res.status(code).end("Unable to add this rfc");
       else
-        res.status(code).end("User modified");
+        res.status(code).end("Rfc added");
     });
   }
 };
 
-exports.addPeople = function(req, res){
+exports.addRfi = function(req, res){
   var id = req.params.id;
-  if(req.body == null) res.status(400).end("Syntax error");
+  if(req.body === null) res.status(400).end("Syntax error");
   else{
-    var people = {
-      client : String,
-      description : String, 
-      location : String, 
-      area : String, 
-      levels : Number
-    }
-    services.addPeople(id,people,function(code){
-      if(code == 404)
-        res.status(code).end("Unable to modify user");
+    services.addRfi(id, req.body.rfi, function(code){
+      if(code === 404)
+        res.status(code).end("Unable to add this rfi");
       else
-        res.status(code).end("User modified");
+        res.status(code).end("Rfc added");
     });
   }
 };
 
-exports.addMore = function(req, res){
+exports.updateStatus = function(req, res){
   var id = req.params.id;
-  if(req.body == null) res.status(400).end("Syntax error");
+  if(req.body === null) res.status(400).end("Syntax error");
   else{
-    var more = {
-      client : String,
-      description : String, 
-      location : String, 
-      area : String, 
-      levels : Number
-    }
-    services.addMore(id,more,function(code){
-      if(code == 404)
-        res.status(code).end("Unable to modify user");
+    services.updateStatus(id, req.body.status, function(code){
+      if(code === 404)
+        res.status(code).end("Unable to add this status");
       else
-        res.status(code).end("User modified");
+        res.status(code).end("Status added");
     });
   }
 };
+
+exports.getRfi = function(req, res){
+  services.getRfi(req.params.id, function(rfi){
+    if(rfi)
+     res.json(rfi);
+   else{
+    res.status(404).end("RFI not avalaible");
+  }
+});
+};
+
+exports.getStatus = function(req, res){
+  services.getStatus(req.params.id, function(status){
+    if(status)
+     res.json(status);
+   else{
+    res.status(404).end("Status not avalaible");
+  }
+});
+};
+
+exports.submissionAccepted = function(req, res){
+  var id = req.params.id;
+  services.submissionAccepted(id, function(code){
+    if(code === 404)
+      res.status(code).end("Unable to add this status");
+    else
+      res.status(code).end("Status added");
+  });
+};
+
+exports.submissionDenied = function(req, res){
+  var id = req.params.id;
+  if(req.body === null) res.status(400).end("Syntax error");
+  else{
+    services.submissionDenied(id, req.body.description, function(code){
+      if(code === 404)
+        res.status(code).end("Unable to add this status");
+      else
+        res.status(code).end("Status added");
+    });
+  }
+};
+
+
+
+
+
 
