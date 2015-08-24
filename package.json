@@ -6,6 +6,7 @@
     "start": "node app.js"
   },
   "dependencies": {
+    "bcrypt-nodejs": "0.0.3",
     "body-parser": "*",
     "errorhandler": "*",
     "express": "*",
@@ -14,6 +15,8 @@
     "morgan": "*",
     "multer": "^0.1.8",
     "node-static": "^0.7.6",
+    "passport": "^0.3.0",
+    "passport-http": "^0.3.0",
     "path": "^0.11.14",
     "request": "^2.60.0"
   }

@@ -1,28 +1,14 @@
-var services = require('../services/mongooseServices');
-var mongoose = require('mongoose');
-var uri = "mongodb://127.0.0.1:27017/Vizbot";
+var services = require('../services/mongooseServices'),
+    bcrypt = require('bcrypt-nodejs'),
+    mongoose = require('mongoose'),
+    uri = "mongodb://127.0.0.1:27017/Vizbot",
+    User = require('../models/user.js')
 
 mongoose.connect(uri);
 
 var db = mongoose.connection;
 
 var schemas = {
-  userSchema : new mongoose.Schema({
-    name : String,
-    mail : String,
-    pwd : String,
-    status: String,
-    registration : String,
-    address : {
-      street : String,
-      city : String,
-      postCode : String
-    },
-    phone : String,
-    consents : [String], 
-    shareConsents : [String],
-    team : [String]
-  }),
 
   consentSchema : new mongoose.Schema({
     title : String,
@@ -45,7 +31,7 @@ var schemas = {
     processing : [{          
       location: String,     
       status: String,
-      status_date: Date,
+      status_date: String,
       livedays: Number,
       suspendeddays: Number,
       totaldays: Number
@@ -139,7 +125,7 @@ var schemas = {
     details : String, 
     response : String, 
     accepted : String,
-    creted_by : String,
+    created_by : String,
     date_letter_sent : String,
     date_of_response : String,
     date_signed_off : String,
@@ -151,15 +137,12 @@ var schemas = {
 })
 }
 
-
 /**
 * Seek the user with the given id
 */
 exports.getUserById = function(id, callback){
   db.on('error', console.error.bind(console, 'connection error:'));
-  var UserModel = mongoose.model('User', schemas.userSchema);
-
-  UserModel.findOne({ _id: id }, function(err, user){
+  User.findOne({ _id: id }, function(err, user){
     if(!err){
       callback(user);
     }
@@ -169,15 +152,22 @@ exports.getUserById = function(id, callback){
 }
 
 /**
+* Check authentication
+**/
+exports.checkAuth = function(mail, password, callback){
+  db.on('error', console.error.bind(console, 'connection error:'));
+  
+}
+  
+
+
+/**
 * Create a new user
 */
 exports.createUser = function(user, callback){
 
   db.on('error', console.error.bind(console, 'connection error:'));
-
-  var UserModel = mongoose.model('User', schemas.userSchema);
-
-  var instance = new UserModel();
+  var instance = new User();
 
   instance.name = user.name;
   instance.mail = user.mail;
@@ -201,11 +191,10 @@ exports.createUser = function(user, callback){
 */
 exports.logIn = function(mail, pwd, callback){
   db.on('error', console.error.bind(console, 'connection error:'));
-  var UserModel = mongoose.model('User', schemas.userSchema);
   console.log("mail");
   console.log(mail);
   console.log(pwd);
-  UserModel.findOne({ mail: mail, pwd : pwd }, function(err, user){
+  User.findOne({ mail: mail}, function(err, user){
     if(!err && user){
       callback(user.id, 200);
     }
@@ -223,10 +212,9 @@ exports.createConsent = function(consent, callback){
   db.on('error', console.error.bind(console, 'connection error:'));
 
   var ConsentModel = mongoose.model('Consent', schemas.consentSchema);
-  var UserModel = mongoose.model('User', schemas.userSchema);
 
   var instance = new ConsentModel();
-  var user = new UserModel();
+  var user = new User();
 
   instance.user = consent.user;
   instance.title = consent.title;
@@ -246,7 +234,7 @@ exports.createConsent = function(consent, callback){
       callback(409);
     }
     else {
-      UserModel.findOne({ _id: consent.user }, function(err, user){
+      User.findOne({ _id: consent.user }, function(err, user){
         if(!err && user){
           user.consents.push(consent.id);
           user.save(callback);
@@ -383,10 +371,8 @@ exports.getConsentsByUser = function(idUser, callback){
   db.on('error', console.error.bind(console, 'connection error:'));
 
   var ConsentModel = mongoose.model('Consent', schemas.consentSchema);
-  var UserModel = mongoose.model('User', schemas.userSchema);
 
   var instance = new ConsentModel();
-  var user = new UserModel();
   var consents = new Array();
 
   this.getUserById(idUser, function(user){
@@ -494,8 +480,11 @@ exports.updateStatus = function(id, status, callback){
 
   ConsentModel.findOne({ _id: id }, function(err, consent){
     if(!err && consent){
+      console.log(status);
       consent.processing.push(status);
+      consent.status = status.status;
       consent.save();
+      console.log(consent);
       callback(201); 
     }
     else{
@@ -548,6 +537,7 @@ exports.submissionAccepted = function(id, callback){
   ConsentModel.findOne({ _id: id }, function(err, consent){
     if(!err && consent){
       consent.submitted = true;
+      consent.status = "vetting";
       consent.save();
       callback(201); 
     }
@@ -578,4 +568,6 @@ exports.submissionDenied = function(id, description, callback){
     }
   });
 }
+
+//module.exports = mongoose.model('User', schemas.userSchema);
 

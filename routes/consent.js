@@ -237,6 +237,7 @@ exports.addRfi = function(req, res){
 
 exports.updateStatus = function(req, res){
   var id = req.params.id;
+  console.log(req.body);
   if(req.body === null) res.status(400).end("Syntax error");
   else{
     services.updateStatus(id, req.body.status, function(code){
