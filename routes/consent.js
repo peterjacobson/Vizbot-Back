@@ -95,6 +95,7 @@ exports.modifyConsent = function(req, res){
 
       agent : req.body.agent,
       client : req.body.client,
+      contact : req.body.contact,
       people : req.body.people,
       lbp : req.body.lbp,
 

@@ -79,6 +79,18 @@ var schemas = {
       mail : String,
       website : String
     },
+    contact: {
+      name : String, 
+      address : {
+        street : String,
+        suburb : String, 
+        city : String, 
+        postCode : String 
+      },
+      phone : String,
+      mail : String,
+      website : String
+    },
     lbp: [{
       name: String,
       classL : String, 
@@ -288,10 +300,11 @@ exports.modifyConsent = function(id, consent, callback){
     instance.old = consent.old;
     instance.buildingWork = consent.buildingWork;
 
-    instance.agent = consent.agent,
-    instance.client = consent.client,
-    instance.people = consent.people,
-    instance.lbp = consent.lbp,
+    instance.agent = consent.agent;
+    instance.contact = consent.contact;
+    instance.client = consent.client;
+    instance.people = consent.people;
+    instance.lbp = consent.lbp;
 
     instance.buildingInfo = consent.buildingInfo;
     instance.project = consent.project;
