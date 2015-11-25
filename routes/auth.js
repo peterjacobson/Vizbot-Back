@@ -20,7 +20,6 @@ passport.use(
 
         // Success
         callback(null, user);
-        console.log(isMatch);
       });
     });
     }));

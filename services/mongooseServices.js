@@ -20,6 +20,8 @@ var schemas = {
     submitted : Boolean,
     vettingDescription : String,
     consentNumber:  String,
+    valuation : String,
+    legalDescription : String,
     lawfullyUse : {
       first : String,
       second : String
@@ -170,8 +172,6 @@ exports.checkAuth = function(mail, password, callback){
   db.on('error', console.error.bind(console, 'connection error:'));
   
 }
-  
-
 
 /**
 * Create a new user
@@ -190,10 +190,10 @@ exports.createUser = function(user, callback){
   instance.consents = [];
 
   instance.save(function (err, user, affected) {
-    if (err) {callback(409); console.log("User :" +user + " affected :  " + affected );}
+    if (err) {callback(409);}
     else {
       if(affected == 1) callback(201, user.id);
-      else {callback(409); console.log("User :" +user + " affected :  " + affected );}
+      else {callback(409);}
     }
   });
 }
@@ -203,7 +203,6 @@ exports.createUser = function(user, callback){
 */
 exports.logIn = function(mail, pwd, callback){
   db.on('error', console.error.bind(console, 'connection error:'));
-  console.log("mail");
   console.log(mail);
   console.log(pwd);
   User.findOne({ mail: mail}, function(err, user){
@@ -239,6 +238,8 @@ exports.createConsent = function(consent, callback){
   instance.numberPeople = consent.numberPeople;
   instance.old = consent.old;
   instance.buildingWork = consent.buildingWork;
+  instance.valuation = consent.valuation;
+  instance.legalDescription = consent.legalDescription;
 
   instance.save(function (err, consent) {
     if (err) {
@@ -299,6 +300,8 @@ exports.modifyConsent = function(id, consent, callback){
     instance.numberPeople = consent.numberPeople;
     instance.old = consent.old;
     instance.buildingWork = consent.buildingWork;
+    instance.valuation = consent.valuation;
+    instance.legalDescription = consent.legalDescription;
 
     instance.agent = consent.agent;
     instance.contact = consent.contact;
@@ -352,7 +355,7 @@ exports.getSubmissions = function(callback){
   var ConsentModel = mongoose.model('Consent', schemas.consentSchema);
   ConsentModel.find({ submitted: false }, {_id : 1}, function(err, list){
     if(!err){
-      console.log(list)
+      console.log(list);
       callback(list);
     }
     else

@@ -1,5 +1,6 @@
 var services = require('../services/mongooseServices'),
-request = require('request');
+request = require('request'),
+documentUrl = 'http://ec2-52-18-99-146.eu-west-1.compute.amazonaws.com';
 
 exports.getConsent = function(req, res){
 	services.getConsentById(req.params.id, function(consent){
@@ -61,7 +62,9 @@ exports.createConsent = function(req, res){
       newUse : req.body.newUse,
       numberPeople : req.body.numberPeople,
       old : req.body.old,
-      buildingWork : req.body.buildingWork
+      buildingWork : req.body.buildingWork,
+      valuation : req.body.valuation,
+      legalDescription : req.body.legalDescription
     };
     services.createConsent(consent, function(code, id, instance){
       if(code == 201){
@@ -108,7 +111,7 @@ exports.modifyConsent = function(req, res){
       notifications : req.body.notifications,
       RFI : req.body.RFI
     };
-    console.log(consent);
+    //console.log(consent);
     services.modifyConsent(id, consent, function(code, consent){
       if(code == 200){
         res.json(consent);
@@ -119,7 +122,6 @@ exports.modifyConsent = function(req, res){
         res.status(code).end("Conflict : Unable to Update the Consent");
     });
   }
-  
 };
 
 exports.addBuildingInfo = function(req, res){
@@ -144,7 +146,7 @@ exports.addBuildingInfo = function(req, res){
 
 exports.addDocument = function(req, res){
   var doc = {
-    url : "http://localhost:3000/consentDocument/" + req.files.file.name,
+    url : documentUrl +"/consentDocument/" + req.files.file.name,
     name : req.files.file.originalname,
     idUser : req.params.id
   };
@@ -163,22 +165,10 @@ exports.addDocument = function(req, res){
 exports.addProductSpec = function(req, res){
   var productArray = req.body;
   for (var i = 0; i < productArray.length; i++) {
-    var options = {
-      url: productArray[i].url,
-      headers: {
-        'Authorization': 'Basic ZmRMVVFOZ0huNDc3Ong='
-      }
-    };
-    console.log(options);
-      request(options, function (error, response, body) {
-    var href = response.request.href;
-    var res = href.split("/");
     var doc = {
-      url : href,
-      name : res[res.length - 1],
-      idUser : req.params.id
+      url: productArray[i].url,
+      name : productArray[i].name
     };
-
     services.updatedDocument(doc, function(code){
       if(code === 404){
         res.status(code).end("Unable to upload the files");
@@ -187,15 +177,13 @@ exports.addProductSpec = function(req, res){
         //res.status(code).end("Document uploaded");
       }
     });
-    });
   }
 
 };
 
 exports.addCodeCompliance = function(req, res){
-  console.log(req.params.clause);
   var doc = {
-    url : "http://localhost:3000/consentDocument/" + req.files.file.name,
+    url : documentUrl +"/consentDocument/" + req.files.file.name,
     name : req.files.file.originalname,
     idUser : req.params.id,
     clause : req.params.clause
@@ -292,9 +280,3 @@ exports.submissionDenied = function(req, res){
     });
   }
 };
-
-
-
-
-
-
