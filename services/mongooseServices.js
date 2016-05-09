@@ -353,7 +353,7 @@ exports.getSubmissions = function(callback){
   db.on('error', console.error.bind(console, 'connection error:'));
 
   var ConsentModel = mongoose.model('Consent', schemas.consentSchema);
-  ConsentModel.find({ submitted: false }, {_id : 1}, function(err, list){
+  ConsentModel.find({ status: 'submitted' }, {_id : 1}, function(err, list){
     if(!err){
       console.log(list);
       callback(list);
